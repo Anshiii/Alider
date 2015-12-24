@@ -1,0 +1,39 @@
+.aliderAnshi-wrap {
+    font-size: 0;
+    /*overflow: hidden;*/
+
+}
+
+.aliderAnshi-screen {
+    white-space: nowrap;
+    transition: .8s;
+}
+
+.aliderAnshi-circle-papa a {
+    display: inline-block;
+}
+
+.aliderAnshi-circle-papa {
+    text-align: center;
+    position: relative;
+    bottom: 19px;
+}
+
+.aliderAnshi-circle-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    border: 2px solid #DDDBDD;
+    display: inline-block;
+    margin-right: 2px;
+}
+
+.aliderAnshi-cir-on {
+    background-color: #FFF;
+}
+
+.aliderAnshi-circle-dot:hover {
+    transform: scale(1.3);
+    cursor: pointer;
+    background-color: #FFF;
+}

@@ -7,16 +7,21 @@ var demo = {
 };
 
 /*(function($){*/
+
 $.fn.alider = function (obj) {
     var strimg = [];
-    var strcir = [];
-    var cirpapa = this.find(".aliderAnshi-circle-papa");
-    var imgpapa = this.find(".aliderAnshi-screen");
+    var strcir = "";
     for (var i = obj.url.length - 1; i >= 0; i--) {
         strimg[i] = '<a><img class="aliderAnshi-img" src=' + obj.url[i] + ' /></a>';
-        strcir[i] = '<li class="aliderAnshi-circle-dot"></li>';
+        strcir += '<li class="aliderAnshi-circle-dot"></li>';
     }
-    var cir = $(strcir);
+    console.log(strcir, 1); //长字符串（无逗号
+    console.log($(strcir), 11); //多个节点
+    console.log(strimg, 2); //数组
+    console.log($(strimg), 22); //jq数组对象
+    console.log($('<p></p>,<p></p>'), 22); //带逗号的字符串
+
+    var $strcir = $(strcir);
 
     this.append([
         '<div class="aliderAnshi-screen"></div>',
@@ -24,39 +29,42 @@ $.fn.alider = function (obj) {
         '<button class="aliderAnshi-button-right"></button>',
         '<ul class="aliderAnshi-circle-papa"></ul>'
     ]);
+    var cirpapa = this.find(".aliderAnshi-circle-papa");
+    var imgpapa = this.children(".aliderAnshi-screen");
     imgpapa.append(strimg).css("margin-left", 0);
-    cir.eq(0).addClass("aliderAnshi-cir-on");
+    cirpapa.append($strcir);
+    $strcir.eq(0).addClass("aliderAnshi-cir-on");
     this.css("width", 854).css("height", 270);
     //幻灯逻辑
     var rollX = 0;
     var tm = 0;
     //点击逻辑
-    (function(fat) {
+    (function () {
         //箭头点击
         $(".aliderAnshi-button-right").on("click", function () {
             rollX++;
             if (rollX > (obj.url.length - 1)) {
                 rollX = 0
             }
-            slideroll(rollX,fat);
+            slideroll(rollX);
         });
         $(".aliderAnshi-button-left").on("click", function () {
             rollX--;
             if (rollX < 0) {
                 rollX = (obj.url.length - 1);
             }
-            slideroll(rollX,fat);
+            slideroll(rollX);
         });
         //圆圈点击
         $(".aliderAnshi-circle-dot").on("click", function () {
-            slideroll($(this).index(),fat);
+            slideroll($(this).index());
         })
     })(this);
     //slider滚动逻辑
     function slideroll(rollX) {
         imgpapa.css("margin-left", -rollX * 100 + "%");
-        cir.each().removeClass("aliderAnshi-cir-on");
-        cir.eq(rollX).addClass("aliderAnshi-cir-on");
+        $strcir.removeClass("aliderAnshi-cir-on");
+        $strcir.eq(rollX).addClass("aliderAnshi-cir-on");
     }
 
     function autoplay() {
@@ -75,11 +83,9 @@ $.fn.alider = function (obj) {
             clearInterval(tm);
         }
     };
-    autoplay(this);
+    autoplay.apply();
     //鼠标悬浮停止播放
-    this.on("mouseover", stop).on("mouseout", function() {
-        autoplay($(this))
-    });
+    this.on("mouseover", stop).on("mouseout", autoplay);
     return this;
 };
 /*})(jQuery);*/

@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1, user-scalable=no">
     <title></title>
     <link href="alider.css" rel="stylesheet">
     <script src="jquery-2.1.4.min.js"></script>
@@ -12,18 +13,15 @@
 <div class="aliderAnshi-wrap" id="2"></div>
 
 <script>
-    /*$('#1').alider({
-
-     });
-     alider({
-     obj: $('#1'),
-     url: ["demo.jpg", "demo.jpg", "demo.jpg", "demo.jpg"]
-     });*/
     $('#1').alider({
-        url: ["demo.jpg", "demo.jpg", "demo.jpg", "demo.jpg"]
+        size: [854, 270],
+        url: ["demo.jpg", "demo.jpg", "demo.jpg", "demo.jpg"],
+        speed: [2000]
     });
     $('#2').alider({
-        url: ["demo.jpg", "demo.jpg", "demo.jpg", "demo.jpg"]
+        size: [854, 270],
+        url: ["demo.jpg", "demo.jpg", "demo.jpg", "demo.jpg"],
+        speed: [2000]
     });
 
 </script>

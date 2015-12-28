@@ -1,11 +1,8 @@
 /**
- * Created by Anshi on 2015/12/23.
+ * Created by  on 2015/12/23.
  */
 
-/*ÊÖ»úswipeÊÊÅä£¬Ô­µãµã»÷ÊÂ¼þÑ¡Ôñ*/
-/*3d¿áìÅÐ§¹û ¹þ¹þ¹þ¹þ*/
-/*»ÃµÆµÄËÙ¶ÈÒ²Òª±©Â¶³öÀ´²ÅÐÐ¡£*/
-/*×èÖ¹Ã°ÅÝ*/
+// if touchEvent in Window
 var demo = {
     size: [854, 270],
     url: ["demo.jpg", "demo.jpg", "demo.jpg", "demo.jpg"],
@@ -14,96 +11,79 @@ var demo = {
 
 (function ($) {
     $.fn.alider = function (obj) {
-
-        //¼ì²âÖÕ¶Ë
-        /*function browserRedirect() {
-         var sUserAgent = navigator.userAgent.toLowerCase();
-         var bIsIpad = sUserAgent.match(/ipad/i) == "ipad";
-         var bIsIphoneOs = sUserAgent.match(/iphone os/i) == "iphone os";
-         var bIsMidp = sUserAgent.match(/midp/i) == "midp";
-         var bIsUc7 = sUserAgent.match(/rv:1.2.3.4/i) == "rv:1.2.3.4";
-         var bIsUc = sUserAgent.match(/ucweb/i) == "ucweb";
-         var bIsAndroid = sUserAgent.match(/android/i) == "android";
-         var bIsCE = sUserAgent.match(/windows ce/i) == "windows ce";
-         var bIsWM = sUserAgent.match(/windows mobile/i) == "windows mobile";
-         }*/
-
-        //Èç¹ûÃ»ÓÐ¸ùÔªËØ£¬ÍË³ö
+        if (!obj) return;
+        //æ£€æµ‹æ˜¯å¦æ”¯æŒè§¦æ‘¸äº‹ä»¶
         var strimg = [];
         var strcir = "";
         for (var i = obj.url.length - 1; i >= 0; i--) {
-            strimg[i] = '<a><img class="aliderAnshi-img" src=' + obj.url[i] + ' /></a>';
-            strcir += '<li class="aliderAnshi-circle-dot"></li>';
+            strimg[i] = '<a><img class="alider-img" src=' + obj.url[i] + ' /></a>';
+            strcir += '<li class="alider-circle-dot"></li>';
         }
-        /*jqÖÐappendµÄ×Ö·û´®ÎªÎÞ¿Õ¸ñ³¤×Ö·û´®£¬Èô´ø¿Õ¸ñÔòÑ¡ÖÐµÄÊÇ´øtextµÄ¿ÕÎÄ±¾½èµã£¬like Dom*/
+        //html element ,$.append("<div></div><p></p>")  no[,]
         var $strcir = $(strcir);
         this.append([
-            '<div class="aliderAnshi-screen"></div>',
-            '<button class="aliderAnshi-button-left"></button>',
-            '<button class="aliderAnshi-button-right"></button>',
-            '<ul class="aliderAnshi-circle-papa"></ul>'
+            '<div class="alider-screen"></div>',
+            '<button class="alider-button-left"></button>',
+            '<button class="alider-button-right"></button>',
+            '<ul class="alider-circle-papa"></ul>'
         ]);
-        var cirpapa = this.find(".aliderAnshi-circle-papa");
-        var imgpapa = this.children(".aliderAnshi-screen");
+        var cirpapa = this.find(".alider-circle-papa");
+        var imgpapa = this.children(".alider-screen");
         imgpapa.append(strimg).css("margin-left", 0);
         cirpapa.append($strcir);
-        $strcir.eq(0).addClass("aliderAnshi-cir-on");
+        $strcir.eq(0).addClass("alider-cir-on");
         this.css("width", obj.size[0]).css("height", obj.size[1]);
 
+        //slider roll
+        /*touch left and */
+        var rollX = 0;
+        var tm = null;
+        (function () {
+            $(".alider-button-right").on("click", function () {
+                rollX++;
+                if (rollX > (obj.url.length - 1)) {
+                    rollX = 0
+                }
+                slideroll(rollX);
+            });
+            $(".alider-button-left").on("click", function () {
+                rollX--;
+                if (rollX < 0) {
+                    rollX = (obj.url.length - 1);
+                }
+                slideroll(rollX);
+            });
+            $(".alider-circle-dot").on("click", function () {
+                rollX = $(this).index();
+                slideroll($(this).index());
+            })
+        })(this);
+        function slideroll(rollX) {
+            imgpapa.css("margin-left", -rollX * 100 + "%");
+            $strcir.removeClass("alider-cir-on");
+            $strcir.eq(rollX).addClass("alider-cir-on");
+        }
 
-        //pc »ÃµÆÂß¼­
-        /*       var rollX = 0;
-         var tm = null;
-         //µã»÷Âß¼­
-         (function () {
-         //¼ýÍ·µã»÷
-         $(".aliderAnshi-button-right").on("click", function () {
-         rollX++;
-         if (rollX > (obj.url.length - 1)) {
-         rollX = 0
-         }
-         slideroll(rollX);
-         });
-         $(".aliderAnshi-button-left").on("click", function () {
-         rollX--;
-         if (rollX < 0) {
-         rollX = (obj.url.length - 1);
-         }
-         slideroll(rollX);
-         });
-         //Ô²È¦µã»÷
-         $(".aliderAnshi-circle-dot").on("click", function () {
-         slideroll($(this).index());
-         })
-         })(this);
-         //slider¹ö¶¯Âß¼­
-         function slideroll(rollX) {
-         imgpapa.css("margin-left", -rollX * 100 + "%");
-         $strcir.removeClass("aliderAnshi-cir-on");
-         $strcir.eq(rollX).addClass("aliderAnshi-cir-on");
-         }
+        function autoplay() {
+            tm = setInterval(function () {
+                rollX++;
+                if (rollX > (obj.url.length - 1)) {
+                    rollX = 0
+                }
+                slideroll(rollX);
+            }, obj.speed);
+        }
+        var stop = function () {
+            if (tm) {
+                clearInterval(tm);
+            }
+        };
+        autoplay(); //init
+        this.on("mouseover", stop).on("mouseout", autoplay);
 
-         function autoplay() {
-         tm = setInterval(function () {
-         rollX++;
-         if (rollX > (obj.url.length - 1)) {
-         rollX = 0
-         }
-         slideroll(rollX);
-         }, obj.speed);
-         }
 
-         //Í£Ö¹×Ô¶¯²¥·Å
-         var stop = function () {
-         if (tm) {
-         clearInterval(tm);
-         }
-         };
-         autoplay.apply();
-         //Êó±êÐü¸¡Í£Ö¹²¥·Å
-         this.on("mouseover", stop).on("mouseout", autoplay);
-         */
-        //ÊÊÅäÊÖ»ú,touchÊÂ¼þ¡£
+        //touchEvent
+        //
         var Sdot = {};
         var del = {};
         var end = {};
@@ -123,9 +103,8 @@ var demo = {
                 }
             },
             Tstart: function (e) {
-                //¼ÇÂ¼XºÍY,ºÍÊ±¼ä´Á
                 Sdot = getDot(e);
-                console.log("movestart",1)
+                console.log("movestart", 1)
             },
             Tmove: function (e) {
                 var Mdot = getDot(e);
@@ -135,7 +114,7 @@ var demo = {
                     time: Mdot.time - Sdot.time
                 };
                 translate(del.X);
-                console.log(+new Date,2)
+                console.log('MOV', Mdot, Sdot)
 
             },
             Tend: function (e) {
@@ -145,7 +124,7 @@ var demo = {
                     Y: Edot.Y - Sdot.Y,
                     time: Edot.time - Sdot.time
                 };
-                console.log("moveEnd",3)
+                console.log("moveEnd", Edot, Sdot)
             }
         };
 
@@ -157,127 +136,20 @@ var demo = {
             return dot;
         }
 
-        function translate(delX, delY, dre) {
+        function translate(delX) {
             imgpapa.css("transform", "translateX(" + delX + "px)");
-            console.log(+new Date,1)
+            console.log('TRAN', delX)
         }
 
-        imgpapa.on("touchstart touchmove touchend", function (e) {
-            touchEvent.touch(e)
-        });
+        //è§¦æ‘¸å¯åŠ¨
+        if ('ontouchstart' in window || 'ontouchstart' in document.documentElement)
+            imgpapa.on("touchstart touchmove touchend", function (e) {
+                touchEvent.touch(e)
+            });
 
         /*return this;*/
     };
 })(jQuery);
-/*var alider = function (obj) {
- //obj = {num:6,url:[1,2,3,4,5,6]
- //Ìí¼ÓÒ»¸ö¸¸¼¶div¾ÍÄÜÊ¹ÓÃ£¬Í¼Æ¬ÊÇ×ÔÊÊÓ¦´óÐ¡µÄ¡£°´Å¥µÄ´óÐ¡£¬ºÍÔ²È¦µÄÎ»ÖÃ¿ÉÒÔµ÷Õû¡£
- //ÏÈÊ¹ÓÃjq£¬ºóÔÙ¿¼ÂÇÞð³ý...ÔõÃ´ÓÃ= =°¡¹þ¹þ¹þ¡£¡£¡£
 
- //htmlÔªËØÉú³É
- var strimg = [];
- var strcir = [];
- var cirpapa = $(".aliderAnshi-circle-papa");
- for (var i = obj.url.length - 1; i >= 0; i--) {
- strimg[i] = '<a><img class="aliderAnshi-img" src=' + obj.url[i] + ' /></a>';
- strcir[i] = '<li class="aliderAnshi-circle-dot"></li>';
- }
-
- $(".aliderAnshi-wrap").append([
- '<div class="aliderAnshi-screen"></div>',
- '<button class="aliderAnshi-button-left"></button>',
- '<button class="aliderAnshi-button-right"></button>',
- '<ul class="aliderAnshi-circle-papa"></ul>'
- ]);
- $(".aliderAnshi-screen").append(strimg);
- $(".aliderAnshi-circle-papa").append(strcir);
-
- //»ÃµÆÂß¼­
- var rollX = 0;
- var tm = 0;
- //³õÊ¼»¯£¨Ä¬ÈÏÕ¹Ê¾µÚÒ»ÕÅ£©
- (function init() {
- $(".aliderAnshi-circle-papa").eq(0).addClass("aliderAnshi-cir-on");
- $(".aliderAnshi-screen").css("margin-left", 0);
- console.log($(".aliderAnshi-img").width());
- $(".aliderAnshi-wrap").css("width", 854);
- $(".aliderAnshi-wrap").css("height", 270);
- })();
- //µã»÷Âß¼­
- (function click() {
- //¼ýÍ·µã»÷
- $(".aliderAnshi-button-right").on("click", function () {
- rollX++;
- if (rollX > (obj.url.length - 1)) {
- rollX = 0
- }
- slideroll(rollX);
- });
- $(".aliderAnshi-button-left").on("click", function () {
- rollX--;
- if (rollX < 0) {
- rollX = (obj.url.length - 1);
- }
- slideroll(rollX);
- });
- //Ô²È¦µã»÷
- $(".aliderAnshi-circle-dot").on("click", function () {
- console.log($(this).index());
- slideroll($(this).index());
- })
- })();
- //slider¹ö¶¯Âß¼­
- function slideroll(rollX) {
- $(".aliderAnshi-screen").css("margin-left", -rollX * 100 + "%");
- $(".aliderAnshi-circle-papa").children().removeClass("aliderAnshi-cir-on");
- $(".aliderAnshi-circle-papa").eq(rollX).addClass("aliderAnshi-cir-on");
- }
-
- function autoplay() {
- tm = setInterval(function () {
- rollX++;
- if (rollX > (obj.url.length - 1)) {
- rollX = 0
- }
- slideroll(rollX);
- },2000);
- }
-
- //Í£Ö¹×Ô¶¯²¥·Å
- var stop = function () {
- if (tm) {
- clearInterval(tm);
- }
- };
- autoplay();
- //Êó±êÐü¸¡Í£Ö¹²¥·Å
- $(".aliderAnshi-wrap").on("mouseover", stop).on("mouseout", autoplay);
- };*/
-
-
-/*jQuery.fn.extend( {
- css: function( name, value ) {
- return access( this, function( elem, name, value ) {
- var styles, len,
- map = {},
- i = 0;
-
- if ( jQuery.isArray( name ) ) {
- styles = getStyles( elem );
- len = name.length;
-
- for ( ; i < len; i++ ) {
- map[ name[ i ] ] = jQuery.css( elem, name[ i ], false, styles );
- }
-
- return map;
- }
-
- return value !== undefined ?
- jQuery.style( elem, name, value ) :
- jQuery.css( elem, name );
- }, name, value, arguments.length > 1 );
- }
- } );*/
 
 

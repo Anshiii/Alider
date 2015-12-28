@@ -1,24 +1,25 @@
-.aliderAnshi-wrap {
+.alider-wrap {
     font-size: 0;
     overflow: hidden;
+    position: relative;
 }
 
-.aliderAnshi-screen {
+.alider-screen {
     white-space: nowrap;
-    transition:  linear;
+    transition: 0.8s linear;
 }
 
-.aliderAnshi-circle-papa a {
+.alider-circle-papa a {
     display: inline-block;
 }
 
-.aliderAnshi-circle-papa {
+.alider-circle-papa {
     text-align: center;
     position: relative;
     bottom: 19px;
 }
 
-.aliderAnshi-circle-dot {
+.alider-circle-dot {
     width: 9px;
     height: 9px;
     border-radius: 50%;
@@ -27,28 +28,43 @@
     margin-right: 2px;
 }
 
-.aliderAnshi-cir-on {
+.alider-cir-on {
     background-color: #FFF;
 }
 
-.aliderAnshi-circle-dot:hover {
+.alider-circle-dot:hover {
     transform: scale(1.3);
     cursor: pointer;
     background-color: #FFF;
 }
 
+.alider-button-left,.alider-button-right {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    background: rgba(222, 222, 222, 0.5);
+    border: none;
+    padding: 0;
+    width: 5%;
+}
+.alider-button-right{
+    right: 0;
+}
+
 @media screen and(min-width: 600px) {
 
 }
-@media (min-width:900px){
+
+@media (min-width: 900px) {
 
 }
+
 @media (max-width: 1300px) {
 
     /*使用translate做幻灯的情况。*/
-  .aliderAnshi-screen, .aliderAnshi-screen img{
-      width: 100%;
-  }
+    .alider-screen, .alider-screen img {
+        width: 100%;
+    }
 }
 
 /*需要考虑的情况

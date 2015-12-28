@@ -38,22 +38,22 @@ var demo = {
         /*touch left and */
         var rollX = 0;
         var tm = null;
-        (function () {
-            $(".alider-button-right").on("click", function () {
+        (function (one) {
+            one.find(".alider-button-right").on("click", function () {
                 rollX++;
                 if (rollX > (obj.url.length - 1)) {
                     rollX = 0
                 }
                 slideroll(rollX);
             });
-            $(".alider-button-left").on("click", function () {
+            one.find(".alider-button-left").on("click", function () {
                 rollX--;
                 if (rollX < 0) {
                     rollX = (obj.url.length - 1);
                 }
                 slideroll(rollX);
             });
-            $(".alider-circle-dot").on("click", function () {
+            one.find(".alider-circle-dot").on("click", function () {
                 rollX = $(this).index();
                 slideroll($(this).index());
             })
@@ -73,17 +73,18 @@ var demo = {
                 slideroll(rollX);
             }, obj.speed);
         }
+
         var stop = function () {
             if (tm) {
                 clearInterval(tm);
             }
         };
-        autoplay(); //init
-        this.on("mouseover", stop).on("mouseout", autoplay);
+        /*autoplay(); //init
+         this.on("mouseover", stop).on("mouseout", autoplay);*/
 
 
         //touchEvent
-        //
+        //获得向左or向右，表示幻灯向左 or 向右。 X比起始点小，向左。
         var Sdot = {};
         var del = {};
         var end = {};
@@ -124,6 +125,10 @@ var demo = {
                     Y: Edot.Y - Sdot.Y,
                     time: Edot.time - Sdot.time
                 };
+                if (end.X < 0) {/*点击左按钮事件，trans清零*/
+                }
+                if (end.X > 0) {/*点击左按钮事件，trans清零*/
+                }
                 console.log("moveEnd", Edot, Sdot)
             }
         };
@@ -142,11 +147,12 @@ var demo = {
         }
 
         //触摸启动
-        if ('ontouchstart' in window || 'ontouchstart' in document.documentElement)
+        if ('ontouchstart' in window || 'ontouchstart' in document.documentElement) {
+            this.css("width", '100%').css("height", '100%');
             imgpapa.on("touchstart touchmove touchend", function (e) {
                 touchEvent.touch(e)
-            });
-
+            })
+        }
         /*return this;*/
     };
 })(jQuery);

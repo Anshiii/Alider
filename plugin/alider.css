@@ -38,7 +38,7 @@
     background-color: #FFF;
 }
 
-.alider-button-left,.alider-button-right {
+.alider-button-left, .alider-button-right {
     position: absolute;
     top: 0;
     height: 100%;
@@ -46,8 +46,10 @@
     border: none;
     padding: 0;
     width: 5%;
+    outline: none;
 }
-.alider-button-right{
+
+.alider-button-right {
     right: 0;
 }
 
@@ -55,7 +57,7 @@
 
 }
 
-@media (min-width: 900px) {
+@media (min-width: 1301px) {
 
 }
 

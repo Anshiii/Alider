@@ -12,7 +12,6 @@ var demo = {
 (function ($) {
     $.fn.alider = function (obj) {
         if (!obj) return;
-        //检测是否支持触摸事件
         var strimg = [];
         var strcir = "";
         for (var i = obj.url.length - 1; i >= 0; i--) {
@@ -35,7 +34,6 @@ var demo = {
         this.css("width", obj.size[0]).css("height", obj.size[1]);
 
         //slider roll
-        /*touch left and */
         var rollX = 0;
         var tm = null;
         (function (one) {
@@ -79,81 +77,8 @@ var demo = {
                 clearInterval(tm);
             }
         };
-        /*autoplay(); //init
-         this.on("mouseover", stop).on("mouseout", autoplay);*/
-
-
-        //touchEvent
-        //获得向左or向右，表示幻灯向左 or 向右。 X比起始点小，向左。
-        var Sdot = {};
-        var del = {};
-        var end = {};
-        var touchEvent = {
-            touch: function (e) {
-                e.preventDefault();
-                switch (e.originalEvent.type) {
-                    case "touchstart":
-                        this.Tstart(e);
-                        break;
-                    case "touchmove":
-                        this.Tmove(e);
-                        break;
-                    case "touchend":
-                        this.Tend(e);
-                        break;
-                }
-            },
-            Tstart: function (e) {
-                Sdot = getDot(e);
-                console.log("movestart", 1)
-            },
-            Tmove: function (e) {
-                var Mdot = getDot(e);
-                del = {
-                    X: Mdot.X - Sdot.X,
-                    Y: Mdot.Y - Sdot.Y,
-                    time: Mdot.time - Sdot.time
-                };
-                translate(del.X);
-                console.log('MOV', Mdot, Sdot)
-
-            },
-            Tend: function (e) {
-                var Edot = getDot(e);
-                end = {
-                    X: Edot.X - Sdot.X,
-                    Y: Edot.Y - Sdot.Y,
-                    time: Edot.time - Sdot.time
-                };
-                if (end.X < 0) {/*点击左按钮事件，trans清零*/
-                }
-                if (end.X > 0) {/*点击左按钮事件，trans清零*/
-                }
-                console.log("moveEnd", Edot, Sdot)
-            }
-        };
-
-        function getDot(e) {
-            var dot = {};
-            dot.X = e.originalEvent.changedTouches[0].pageX;
-            dot.Y = e.originalEvent.changedTouches[0].pageY;
-            dot.time = e.originalEvent.timeStamp;
-            return dot;
-        }
-
-        function translate(delX) {
-            imgpapa.css("transform", "translateX(" + delX + "px)");
-            console.log('TRAN', delX)
-        }
-
-        //触摸启动
-        if ('ontouchstart' in window || 'ontouchstart' in document.documentElement) {
-            this.css("width", '100%').css("height", '100%');
-            imgpapa.on("touchstart touchmove touchend", function (e) {
-                touchEvent.touch(e)
-            })
-        }
-        /*return this;*/
+        autoplay();
+        this.on("mouseover", stop).on("mouseout", autoplay);
     };
 })(jQuery);
 

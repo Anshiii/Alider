@@ -5,7 +5,7 @@
 
 .aliderAnshi-screen {
     white-space: nowrap;
-    transition: .8s;
+    transition:  linear;
 }
 
 .aliderAnshi-circle-papa a {
@@ -44,6 +44,8 @@
 
 }
 @media (max-width: 1300px) {
+
+    /*使用translate做幻灯的情况。*/
   .aliderAnshi-screen, .aliderAnshi-screen img{
       width: 100%;
   }

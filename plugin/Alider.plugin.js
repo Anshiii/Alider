@@ -13,10 +13,22 @@ var demo = {
 };
 
 (function ($) {
-
     $.fn.alider = function (obj) {
+
+        //检测终端
+        /*function browserRedirect() {
+         var sUserAgent = navigator.userAgent.toLowerCase();
+         var bIsIpad = sUserAgent.match(/ipad/i) == "ipad";
+         var bIsIphoneOs = sUserAgent.match(/iphone os/i) == "iphone os";
+         var bIsMidp = sUserAgent.match(/midp/i) == "midp";
+         var bIsUc7 = sUserAgent.match(/rv:1.2.3.4/i) == "rv:1.2.3.4";
+         var bIsUc = sUserAgent.match(/ucweb/i) == "ucweb";
+         var bIsAndroid = sUserAgent.match(/android/i) == "android";
+         var bIsCE = sUserAgent.match(/windows ce/i) == "windows ce";
+         var bIsWM = sUserAgent.match(/windows mobile/i) == "windows mobile";
+         }*/
+
         //如果没有根元素，退出
-        if (obj) return;
         var strimg = [];
         var strcir = "";
         for (var i = obj.url.length - 1; i >= 0; i--) {
@@ -37,106 +49,123 @@ var demo = {
         cirpapa.append($strcir);
         $strcir.eq(0).addClass("aliderAnshi-cir-on");
         this.css("width", obj.size[0]).css("height", obj.size[1]);
-        //幻灯逻辑
-        var rollX = 0;
-        var tm = null;
-        //点击逻辑
-        (function () {
-            //箭头点击
-            $(".aliderAnshi-button-right").on("click", function () {
-                rollX++;
-                if (rollX > (obj.url.length - 1)) {
-                    rollX = 0
-                }
-                slideroll(rollX);
-            });
-            $(".aliderAnshi-button-left").on("click", function () {
-                rollX--;
-                if (rollX < 0) {
-                    rollX = (obj.url.length - 1);
-                }
-                slideroll(rollX);
-            });
-            //圆圈点击
-            $(".aliderAnshi-circle-dot").on("click", function () {
-                slideroll($(this).index());
-            })
-        })(this);
-        //slider滚动逻辑
-        function slideroll(rollX) {
-            imgpapa.css("margin-left", -rollX * 100 + "%");
-            $strcir.removeClass("aliderAnshi-cir-on");
-            $strcir.eq(rollX).addClass("aliderAnshi-cir-on");
-        }
 
-        function autoplay() {
-            tm = setInterval(function () {
-                rollX++;
-                if (rollX > (obj.url.length - 1)) {
-                    rollX = 0
-                }
-                slideroll(rollX);
-            }, obj.speed);
-        }
 
-        //停止自动播放
-        var stop = function () {
-            if (tm) {
-                clearInterval(tm);
-            }
-        };
-        autoplay.apply();
-        //鼠标悬浮停止播放
-        this.on("mouseover", stop).on("mouseout", autoplay);
+        //pc 幻灯逻辑
+        /*       var rollX = 0;
+         var tm = null;
+         //点击逻辑
+         (function () {
+         //箭头点击
+         $(".aliderAnshi-button-right").on("click", function () {
+         rollX++;
+         if (rollX > (obj.url.length - 1)) {
+         rollX = 0
+         }
+         slideroll(rollX);
+         });
+         $(".aliderAnshi-button-left").on("click", function () {
+         rollX--;
+         if (rollX < 0) {
+         rollX = (obj.url.length - 1);
+         }
+         slideroll(rollX);
+         });
+         //圆圈点击
+         $(".aliderAnshi-circle-dot").on("click", function () {
+         slideroll($(this).index());
+         })
+         })(this);
+         //slider滚动逻辑
+         function slideroll(rollX) {
+         imgpapa.css("margin-left", -rollX * 100 + "%");
+         $strcir.removeClass("aliderAnshi-cir-on");
+         $strcir.eq(rollX).addClass("aliderAnshi-cir-on");
+         }
 
+         function autoplay() {
+         tm = setInterval(function () {
+         rollX++;
+         if (rollX > (obj.url.length - 1)) {
+         rollX = 0
+         }
+         slideroll(rollX);
+         }, obj.speed);
+         }
+
+         //停止自动播放
+         var stop = function () {
+         if (tm) {
+         clearInterval(tm);
+         }
+         };
+         autoplay.apply();
+         //鼠标悬浮停止播放
+         this.on("mouseover", stop).on("mouseout", autoplay);
+         */
         //适配手机,touch事件。
         var Sdot = {};
         var del = {};
+        var end = {};
         var touchEvent = {
             touch: function (e) {
                 e.preventDefault();
                 switch (e.originalEvent.type) {
                     case "touchstart":
-                        Tstart(e);
+                        this.Tstart(e);
                         break;
                     case "touchmove":
-                        Tmove(e);
+                        this.Tmove(e);
                         break;
                     case "touchend":
-                        Tend(e);
+                        this.Tend(e);
                         break;
                 }
             },
-            dot: {start: [x, y]},
             Tstart: function (e) {
                 //记录X和Y,和时间戳
-                Sdot = {
-                    X: e.originalEvent.changedTouches[0].pageX,
-                    Y: e.originalEvent.changedTouches[0].pageY,
-                    time: e.originalEvent.timeStamp
-                };
+                Sdot = getDot(e);
+                console.log("movestart",1)
             },
             Tmove: function (e) {
-                var Smove = {
-                    X: e.originalEvent.changedTouches[0].pageX,
-                    Y: e.originalEvent.changedTouches[0].pageY,
-                    time: e.originalEvent.timeStamp
-                };
+                var Mdot = getDot(e);
                 del = {
-                    X: Smove.X - Sdot.X,
-                    Y: Smove.Y - Sdot.Y,
-                    time: Smove.time - Sdot.time
+                    X: Mdot.X - Sdot.X,
+                    Y: Mdot.Y - Sdot.Y,
+                    time: Mdot.time - Sdot.time
                 };
-                translate(del.X,del.Y,dre)
-            },
-            Tend: function () {
+                translate(del.X);
+                console.log(+new Date,2)
 
+            },
+            Tend: function (e) {
+                var Edot = getDot(e);
+                end = {
+                    X: Edot.X - Sdot.X,
+                    Y: Edot.Y - Sdot.Y,
+                    time: Edot.time - Sdot.time
+                };
+                console.log("moveEnd",3)
             }
         };
 
-        function translate (delX,delY,dre){
-
+        function getDot(e) {
+            var dot = {};
+            dot.X = e.originalEvent.changedTouches[0].pageX;
+            dot.Y = e.originalEvent.changedTouches[0].pageY;
+            dot.time = e.originalEvent.timeStamp;
+            return dot;
         }
+
+        function translate(delX, delY, dre) {
+            imgpapa.css("transform", "translateX(" + delX + "px)");
+            console.log(+new Date,1)
+        }
+
+        imgpapa.on("touchstart touchmove touchend", function (e) {
+            touchEvent.touch(e)
+        });
+
         /*return this;*/
     };
 })(jQuery);

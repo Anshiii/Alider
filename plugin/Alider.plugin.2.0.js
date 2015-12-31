@@ -5,7 +5,7 @@
 // if touchEvent in Window
 var demo = {
     size: [854, 270],
-    url: ["demo.jpg", "demo.jpg", "demo.jpg", "demo.jpg"],
+    url: ["demo_1.jpg", "demo_2.jpg", "demo_2.jpg", "demo_4.jpg"],
     speed: [2000]
 };
 
@@ -15,72 +15,68 @@ var demo = {
         //检测是否支持触摸事件
         var strimg = [];
         var strcir = "";
-        for (var i = obj.url.length - 1; i >= 0; i--) {
-            strimg[i] = '<a><img class="alider-img" src=' + obj.url[i] + ' /></a>';
-            strcir += '<li class="alider-circle-dot"></li>';
-        }
-        //html element ,$.append("<div></div><p></p>")  no[,]
-        var $strcir = $(strcir);
-        this.append([
+        var that = this;
+
+        //父级元素生成。
+        that.append([
             '<div class="alider-screen"></div>',
             '<button class="alider-button-left"></button>',
             '<button class="alider-button-right"></button>',
             '<ul class="alider-circle-papa"></ul>'
         ]);
-        var cirpapa = this.find(".alider-circle-papa");
-        var imgpapa = this.children(".alider-screen");
-        imgpapa.append(strimg).css("margin-left", 0);
+        var cirpapa = that.find(".alider-circle-papa");
+        var imgpapa = that.children(".alider-screen");
+        for (var i = obj.url.length - 1; i >= 0; i--) {
+            strimg[i] = '<a class="alider-a"><img class="alider-img" src=' + obj.url[i] + ' /></a>';
+            strcir += '<li class="alider-circle-dot"></li>';
+        }
+        var $strcir = $(strcir);
+  /*      var that.find(".alider-a") = that.find(".alider-a");*/
+        //html element ,$.append("<div></div><p></p>")  no[,]
+        imgpapa.append(strimg);
         cirpapa.append($strcir);
-        $strcir.eq(0).addClass("alider-cir-on");
-        this.css("width", obj.size[0]).css("height", obj.size[1]);
 
-        //slider roll
-        /*touch left and */
-        /*var rollX = 0;
-         var tm = null;
-         (function (one) {
-         one.find(".alider-button-right").on("click", function () {
-         rollX++;
-         if (rollX > (obj.url.length - 1)) {
-         rollX = 0
-         }
-         slideroll(rollX);
-         });
-         one.find(".alider-button-left").on("click", function () {
-         rollX--;
-         if (rollX < 0) {
-         rollX = (obj.url.length - 1);
-         }
-         slideroll(rollX);
-         });
-         one.find(".alider-circle-dot").on("click", function () {
-         rollX = $(this).index();
-         slideroll($(this).index());
-         })
-         })(this);
-         function slideroll(rollX) {
-         imgpapa.css("margin-left", -rollX * 100 + "%");
-         $strcir.removeClass("alider-cir-on");
-         $strcir.eq(rollX).addClass("alider-cir-on");
-         }
+        //触摸启动
+        if ('ontouchstart' in window || 'ontouchstart' in document.documentElement) {
+            that.css("width", '100%');
+            that.find(".alider-a").css('width', that.width() + "px");
+            console.log(that.find(".alider-a"));//????
+            imgpapa.on("touchstart touchmove touchend", function (e) {
+                touchEvent.touch(e)
+            })
+        } else {
+            that.css("width", obj.size[0]).css("height", obj.size[1]);
+        }
+        console.log(that.width() + "px");
+        imgpapa.css("width", that.width() * obj.url.length + "px").css("height",that.height()+"px");
+        console.log(imgpapa.width());
 
-         function autoplay() {
-         tm = setInterval(function () {
-         rollX++;
-         if (rollX > (obj.url.length - 1)) {
-         rollX = 0
-         }
-         slideroll(rollX);
-         }, obj.speed);
-         }
+        function threeShow(num) {
+            //num表示当前显示幻灯的下标数。
+            /*if (num < 0 || num >= that.find(".alider-a").length) return;*/
+            const lastrans = 300;
+            console.log(that.find(".alider-a"))
+            imgpapa.children().hide();
+            that.find(".alider-a").eq(num).show();
+            $strcir.removeClass("alider-cir-on");
+            $strcir.eq(num).addClass("alider-cir-on");
+            if (num === that.find(".alider-a").length - 1) {
+                that.find(".alider-a").eq(num - 1).show();
+                that.find(".alider-a").eq(0).show().css("transform", "translateX(" + lastrans + "%)");
+                imgpapa.css("left", -that.width() * 2 + "px");
+            } else if (num === 0) {
+                that.find(".alider-a").eq(num + 1).show();
+                that.find(".alider-a").eq(that.find(".alider-a").length - 1).show().css("transform", "translateX(-" + lastrans + "%)");
+            } else {
+                that.find(".alider-a").eq(num + 1).show();
+                that.find(".alider-a").eq(num - 1).show();
+                imgpapa.css("left", -that.width() + "px");
+            }
+        }
 
-         var stop = function () {
-         if (tm) {
-         clearInterval(tm);
-         }
-         };
-         autoplay(); //init
-         this.on("mouseover", stop).on("mouseout", autoplay);*/
+        //@@@init
+        console.log("num=2");
+        threeShow(2);
 
         //touchEvent
         //获得向左or向右，表示幻灯向左 or 向右。 X比起始点小，向左。
@@ -124,20 +120,20 @@ var demo = {
                     Y: Edot.Y - Sdot.Y,
                     time: Edot.time - Sdot.time
                 };
-                if (end.X < 0) {/*点击左按钮事件，trans为一个单位*/
-                    trans++;
-                    imgpapa.css("transform", "translateX(-" + trans * 100 + "%)")
-                        .addClass("movTrans").on("transitionend", function () {
-                            $(this).removeClass("movTrans")
-                        });
-                }
-                if (end.X > 0) {/*点击左按钮事件，trans清零*/
-                    trans--;
-                    imgpapa.css("transform", "translateX(-" + trans * 100 + "%)")
-                        .addClass("movTrans").on("transitionend", function () {
-                            $(this).removeClass("movTrans")
-                        });
-                }
+                /*if (end.X < 0) {/!*点击左按钮事件，trans为一个单位*!/
+                 trans++;
+                 imgpapa.css("transform", "translateX(-" + trans * 100 + "%)")
+                 .addClass("movTrans").on("transitionend", function () {
+                 $(this).removeClass("movTrans")
+                 });
+                 }
+                 if (end.X > 0) {/!*点击左按钮事件，trans清零*!/
+                 trans--;
+                 imgpapa.css("transform", "translateX(-" + trans * 100 + "%)")
+                 .addClass("movTrans").on("transitionend", function () {
+                 $(this).removeClass("movTrans")
+                 });
+                 }*/
             }
         };
 
@@ -154,13 +150,7 @@ var demo = {
             imgpapa.css("transform", "translateX(" + trans * 100 + Math.abs(delX) / imgpapa.width() + "%)");
         }
 
-        //触摸启动
-        if ('ontouchstart' in window || 'ontouchstart' in document.documentElement) {
-            this.css("width", '100%').css("height", '100%');
-            imgpapa.on("touchstart touchmove touchend", function (e) {
-                touchEvent.touch(e)
-            })
-        }
+
         /*return this;*/
     };
 })(jQuery);

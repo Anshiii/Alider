@@ -1,15 +1,30 @@
+*{
+    padding: 0;
+    margin: 0;
+}
 .alider-wrap {
     font-size: 0;
-    overflow: hidden;
+    /*overflow: hidden;*/
     position: relative;
+    margin: 0 auto;
 }
 
 .alider-screen {
-    white-space: nowrap;
+     /*white-space: nowrap;*/
+    /*transition: 0.8s linear;*/
+   /* width:100%;*/
+    position: relative;
+}
+.transition{
     transition: 0.8s linear;
 }
+
 .movTrans{
     transition:500ms ease-out;
+}
+
+.alider-a{
+    float: left;
 }
 
 .alider-circle-papa a {

@@ -71,26 +71,22 @@ var demo = {
             })
         })();
 
-        function regTrans(src) {
-            var num = /\d/g;
-            return parseInt(src.match(num).join(""));//符(负)号没取。。
-        }
 
         function slideroll(rollX) {
             //触摸滑动。1，获取现在的值，2，现在的值加上delta移动 3，触摸结束后判断delta是否大于width
             //的50% 若是，则移动一张幻灯，不是则回到原幻灯处。
             //一般向滚动
-            //@q这里用margin-left做会有虚化？？@q用100%滑动起来不那么精准
+            //@q这里用margin-left做会有虚化？？trans好像也有虚化呵呵@q用100%滑动起来不那么精准
             imgpapa.css("transform", "translateX(-" + rollX * 100 + "%)").addClass("transition")
                 .on("transitionend", function () {
                     imgpapa.removeClass("transition")
                 });//-放在引号右边无效
             $strcir.removeClass("alider-cir-on");
             $strcir.eq(rollX).addClass("alider-cir-on");
-            /* console.log(imgpapa[0].style.transform);//用正则获取*/
-            //console.log(parseFloat(imgpapa[0].getAttribute("style")));//用正则获取
-            //console.log(window.getComputedStyle(imgpapa[0]).transform);同下
-            //console.log(imgpapa.css("webkit-transform"));
+            /* console.log(imgpapa[0].style.transform);//用正则获取
+             console.log(parseFloat(imgpapa[0].getAttribute("style")));//用正则获取
+             console.log(window.getComputedStyle(imgpapa[0]).transform);
+             console.log(imgpapa.css("webkit-transform"));*/
             //@q2 css能拿到，attr不行。属性其实只是style?...
         }
 
@@ -100,7 +96,6 @@ var demo = {
         var Sdot = {};
         var del = {};
         var end = {};
-        var trans = 0;
         var touchEvent = {
             touch: function (e) {
                 e.preventDefault();
@@ -137,20 +132,23 @@ var demo = {
                     Y: Edot.Y - Sdot.Y,
                     time: Edot.time - Sdot.time
                 };
-                if (end.X < 0) {
-                    rollX++;
-                    if (rollX > (obj.url.length - 1)) {
-                        rollX = 0
+                if (2 * Math.abs(end.X) > imgpapa.width()) {
+                    if (end.X < 0) {
+                        rollX++;
+                        if (rollX > (obj.url.length - 1)) {
+                            rollX = 0
+                        }
+                        slideroll(rollX);
                     }
-                    slideroll(rollX);
-                }
-                if (end.X > 0) {
-                    rollX--;
-                    if (rollX < 0) {
-                        rollX = (obj.url.length - 1);
+                    if (end.X > 0) {
+                        rollX--;
+                        if (rollX < 0) {
+                            rollX = (obj.url.length - 1);
+                        }
+                        slideroll(rollX);
                     }
-                    slideroll(rollX);
                 }
+
             }
         };
 
@@ -162,12 +160,18 @@ var demo = {
             return dot;
         }
 
-        function translate(delX, dir) {
-            var nowTrans = regTrans(imgpapa[0].style.transform);
-           //console.log(Math.abs(delX),"del",imgpapa.width(),"width",Math.round(Math.abs(delX)*100 / imgpapa.width()),"%");
-            imgpapa.css("transform", "translateX(" +Math.round(nowTrans + (delX)*100 / imgpapa.width()) + "%)");
+        function regTrans(src) {
+            var num = /^translateX\((.*)\)$/g;
+            return parseInt(src.match(num).join(""));//符(负)号没取。。
         }
 
+        function translate(delX) {
+            var nowTrans = regTrans(imgpapa[0].style.transform);
+            console.log(imgpapa[0].style.transform);
+            console.log(nowTrans);
+            console.log(Math.abs(delX), "del", imgpapa.width(), "width", Math.round(Math.abs(delX) * 100 / imgpapa.width()), "%");
+            imgpapa.css("transform", "translateX(" + Math.round(nowTrans + (delX) * 100 / imgpapa.width()) + "%)");
+        }
 
         //mb done
 

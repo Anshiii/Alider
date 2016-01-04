@@ -1,3 +1,8 @@
+* {
+    padding: 0;
+    margin: 0;
+}
+
 .alider-wrap {
     font-size: 0;
     overflow: hidden;
@@ -8,8 +13,9 @@
     white-space: nowrap;
 
 }
-.transition{
-    transition: 0.8s linear;
+
+.transition {
+    transition: 0.5s linear;
 }
 
 .alider-circle-papa a {

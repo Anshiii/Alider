@@ -93,7 +93,9 @@ var demo = {
         //pc done
 
         //mb
-        var Sdot = {};
+        var dot = [];
+        var SD = {};
+        var ND = {};
         var del = {};
         var end = {};
         var touchEvent = {
@@ -112,27 +114,34 @@ var demo = {
                 }
             },
             Tstart: function (e) {
-                Sdot = getDot(e);
+                SD = getDot(e);
+                dot[0] = SD;
                 console.log("movestart", 1)
             },
             Tmove: function (e) {
-                var Mdot = getDot(e);
+                //FIRST:  LAST = SD
+                //NOW - LAST
+
+                ND = getDot(e);
+                dot[1] = ND;
+                console.log(dot);
                 del = {
-                    X: Mdot.X - Sdot.X,
-                    Y: Mdot.Y - Sdot.Y,
-                    time: Mdot.time - Sdot.time
+                    X: dot[1].X - dot[0].X,
+                    Y: dot[1].Y - dot[0].Y
+                    /*time: Mdot.time - Sdot.time*/
                 };
-                console.log(imgpapa[0].style.transform);
+                dot[0] = dot[1];
                 translate(del.X);
             },
             Tend: function (e) {
-                var Edot = getDot(e);
+                var ED = getDot(e);
                 end = {
-                    X: Edot.X - Sdot.X,
-                    Y: Edot.Y - Sdot.Y,
-                    time: Edot.time - Sdot.time
+                    X: ED.X - dot[0].X,
+                    Y: ED.Y - dot[0].Y
+                    /*  time: Edot.time - Sdot.time*/
                 };
-                if (2 * Math.abs(end.X) > imgpapa.width()) {
+                end.X = ED.X - SD.X;
+                if (3 * Math.abs(end.X) > imgpapa.width()) {
                     if (end.X < 0) {
                         rollX++;
                         if (rollX > (obj.url.length - 1)) {
@@ -147,8 +156,9 @@ var demo = {
                         }
                         slideroll(rollX);
                     }
+                }else{
+                    slideroll(rollX);
                 }
-
             }
         };
 
@@ -160,17 +170,14 @@ var demo = {
             return dot;
         }
 
-        function regTrans(src) {
-            var num = /^translateX\((.*)\)$/g;
-            return parseInt(src.match(num).join(""));//符(负)号没取。。
-        }
-
         function translate(delX) {
-            var nowTrans = regTrans(imgpapa[0].style.transform);
             console.log(imgpapa[0].style.transform);
-            console.log(nowTrans);
-            console.log(Math.abs(delX), "del", imgpapa.width(), "width", Math.round(Math.abs(delX) * 100 / imgpapa.width()), "%");
+            var nowTrans = parseFloat(imgpapa[0].style.transform.slice(11, -2));
+            //console.log(parseInt(imgpapa[0].style.transform.slice(transNumIdx, -2)));
+            //console.log(Math.abs(delX), "del", imgpapa.width(), "width", Math.round(Math.abs(delX) * 100 / imgpapa.width()), "%");
             imgpapa.css("transform", "translateX(" + Math.round(nowTrans + (delX) * 100 / imgpapa.width()) + "%)");
+            console.log(imgpapa[0].style.transform, "nowtrans");
+            console.log((delX) * 100 / imgpapa.width());
         }
 
         //mb done
@@ -191,8 +198,8 @@ var demo = {
                 clearInterval(tm);
             }
         };
-        //autoplay();
-        /*that.on("mouseover", stop).on("mouseout", autoplay);*/
+       // autoplay();
+        //that.on("mouseover", stop).on("mouseout", autoplay);
     };
 })
 (jQuery);

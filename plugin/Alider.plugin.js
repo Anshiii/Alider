@@ -156,7 +156,7 @@ var demo = {
                         }
                         slideroll(rollX);
                     }
-                }else{
+                } else {
                     slideroll(rollX);
                 }
             }
@@ -198,8 +198,9 @@ var demo = {
                 clearInterval(tm);
             }
         };
-       // autoplay();
-        //that.on("mouseover", stop).on("mouseout", autoplay);
+        autoplay();
+        that.on("mouseover", stop).on("mouseout", autoplay);
+        that.on("touchstart", stop).on("touchend", autoplay);
     };
 })
 (jQuery);

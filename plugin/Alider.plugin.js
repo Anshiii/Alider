@@ -71,11 +71,7 @@ var demo = {
             })
         })();
 
-
         function slideroll(rollX) {
-            //触摸滑动。1，获取现在的值，2，现在的值加上delta移动 3，触摸结束后判断delta是否大于width
-            //的50% 若是，则移动一张幻灯，不是则回到原幻灯处。
-            //一般向滚动
             //@q这里用margin-left做会有虚化？？trans好像也有虚化呵呵@q用100%滑动起来不那么精准
             imgpapa.css("transform", "translateX(-" + rollX * 100 + "%)").addClass("transition")
                 .on("transitionend", function () {
@@ -97,7 +93,6 @@ var demo = {
         var SD = {};
         var ND = {};
         var del = {};
-        var end = {};
         var touchEvent = {
             touch: function (e) {
                 e.preventDefault();
@@ -119,9 +114,6 @@ var demo = {
                 console.log("movestart", 1)
             },
             Tmove: function (e) {
-                //FIRST:  LAST = SD
-                //NOW - LAST
-
                 ND = getDot(e);
                 dot[1] = ND;
                 console.log(dot);
@@ -135,13 +127,25 @@ var demo = {
             },
             Tend: function (e) {
                 var ED = getDot(e);
-                end = {
-                    X: ED.X - dot[0].X,
-                    Y: ED.Y - dot[0].Y
-                    /*  time: Edot.time - Sdot.time*/
+                var end = {
+                    X: ED.X - SD.X,
+                    Y: ED.Y - SD.Y,
+                    time: ED.time - SD.time
                 };
-                end.X = ED.X - SD.X;
-                if (3 * Math.abs(end.X) > imgpapa.width()) {
+                console.log(end.X / end.time);
+                if (end.X / end.time > 0.7) {
+                    rollX--;
+                    if (rollX < 0) {
+                        rollX = (obj.url.length - 1);
+                    }
+                    slideroll(rollX);
+                } else if (end.X / end.time < -0.5) {
+                    rollX++;
+                    if (rollX > (obj.url.length - 1)) {
+                        rollX = 0
+                    }
+                    slideroll(rollX);
+                } else if (3 * Math.abs(end.X) > imgpapa.width()) {
                     if (end.X < 0) {
                         rollX++;
                         if (rollX > (obj.url.length - 1)) {

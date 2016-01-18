@@ -1,4 +1,9 @@
 # Js.demo
-sth there show the point of js from my view
-<h1> A pulgin for slider </h1>
-<p> This is a pulgin which can run in mobile device and pc</p>
+一个妄图适应移动端和pc端轮播插件。
+
+#使用指南
+> $(sel).alider({<br>
+> size:[], //幻灯大小<br>
+> url:[], //图片链接<br>
+> speed:[] //播放速度<br>
+> )

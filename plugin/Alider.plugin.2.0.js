@@ -55,7 +55,7 @@ var demo = {
             //num表示当前显示幻灯的下标数。
             /*if (num < 0 || num >= that.find(".alider-a").length) return;*/
             const lastrans = 300;
-            console.log(that.find(".alider-a"))
+            console.log(that.find(".alider-a"));
             imgpapa.children().hide();
             that.find(".alider-a").eq(num).show();
             $strcir.removeClass("alider-cir-on");
@@ -75,7 +75,6 @@ var demo = {
         }
 
         //@@@init
-        console.log("num=2");
         threeShow(2);
 
         //touchEvent

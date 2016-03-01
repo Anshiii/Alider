@@ -4,9 +4,10 @@
 
 // if touchEvent in Window
 var demo = {
-    size: [854, 270],
+    size: [854, 270, true],//natural尺寸，是否固定
     url: ["demo.jpg", "demo.jpg", "demo.jpg", "demo.jpg"],
-    speed: [2000]
+    speed: [2000],
+
 };
 
 (function ($) {
@@ -34,14 +35,16 @@ var demo = {
         ]);
         var cirpapa = that.find(".alider-circle-papa");
         var imgpapa = that.children(".alider-screen");
-        if ('ontouchstart' in window || 'ontouchstart' in document.documentElement) {
+
+        if (obj.size[2] === true) {
+            that.css("width", obj.size[0]).css("height", obj.size[1]);
+        } else {
             that.css("width", '100%');
             imgpapa.on("touchstart touchmove touchend", function (e) {
                 touchEvent.touch(e)
-            })
-        } else {
-            that.css("width", obj.size[0]).css("height", obj.size[1]);
+            });
         }
+
         imgpapa.append(strimg).css("transform", "translateX(" + 0 + "%)");
         cirpapa.append($strcir);
         $strcir.eq(0).addClass("alider-cir-on");
@@ -176,7 +179,7 @@ var demo = {
 
         function translate(delX) {
             console.log(imgpapa[0].style.transform);
-            var nowTrans = parseFloat(imgpapa[0].style.transform.slice(11, -2));
+            var nowTrans = parseFloat(imgpapa[0].style.transform.slice(11, -2));//@大问题，不同浏览器返回的值是不是不一样
             //console.log(parseInt(imgpapa[0].style.transform.slice(transNumIdx, -2)));
             //console.log(Math.abs(delX), "del", imgpapa.width(), "width", Math.round(Math.abs(delX) * 100 / imgpapa.width()), "%");
             imgpapa.css("transform", "translateX(" + Math.round(nowTrans + (delX) * 100 / imgpapa.width()) + "%)");
